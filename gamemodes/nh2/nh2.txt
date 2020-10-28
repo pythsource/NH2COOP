@@ -1,0 +1,13 @@
+// This is strictly for added a new map category. It is NOT an actual gamemode. 
+"nh2"
+{
+	"base"		"base"
+	"title"		"Nightmare House 2"
+	"maps"		"nh1remake1_v2|4_1_22_5|nh2c1_v2|nh2c2_v2|nh2c3_v2|nh2c4_v2|nh2c5_v2|nh2c6_v2|nh2c7_v2"
+	"menusystem"	"0"
+
+	"settings"
+	{
+
+	}
+}
