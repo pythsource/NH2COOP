@@ -34,10 +34,19 @@ SWEP.HitRate			= 1.25
 SWEP.MinDamage			= 34
 SWEP.MaxDamage			= 55
 
-local SwingSound = Sound( "WeaponFrag.Roll" )
-local HitSoundWorld = Sound( "Canister.ImpactHard" )
-local HitSoundBody = Sound( "Flesh.Break" )
-local PushSoundBody = Sound( "Flesh.ImpactSoft" )
+local DrawSound = Sound( "NH2.Hatchet_Draw" )
+
+local SwingSound = Sound( "NH2.Hatchet_Swing1" )
+local SwingSound2 = Sound( "NH2.Hatchet_Swing2" )
+
+local HeavySwingSound = Sound( "NH2.Hatchet_HeavySwing1" )
+local HeavySwingSound2 = Sound( "NH2.Hatchet_HeavySwing2" )
+
+local SlashSound1 = Sound( "NH2.Hatchet_Slash1" )
+local SlashSound2 = Sound( "NH2.Hatchet_Slash2" )
+
+local StabSound1 = Sound( "NH2.Hatchet_Stab1" )
+local StabSound2 = Sound( "NH2.Hatchet_Stab2" )
 
 function SWEP:Initialize()
 
@@ -56,7 +65,7 @@ function SWEP:PrimaryAttack()
 
 	vm:SendViewModelMatchingSequence( vm:LookupSequence( "swing" ) )
 
-	timer.Create("hitdelay", 0.4, 1, function() self:Hitscan() end)
+	timer.Create("hitdelay", 0.1, 1, function() self:Hitscan() end)
 
 	timer.Start( "hitdelay" )
 
@@ -68,15 +77,16 @@ function SWEP:SecondaryAttack()
 
 	local vm = self.Owner:GetViewModel()
 	
-	self:EmitSound( SwingSound )
+	self:EmitSound( HeavySwingSound )
+	
 	self.Weapon:SetNextPrimaryFire( CurTime() + self.HitRate )
 	self.Weapon:SetNextSecondaryFire( CurTime() + self.HitRate )
 
 	vm:SendViewModelMatchingSequence( vm:LookupSequence( "heavy_swing" ) )
 
-	timer.Create("hitdelay", 0.4, 1, function() self:Hitscan() end)
+	timer.Create("hitdelay2", 1.3, 1, function() self:Hitscan_Secondary() end)
 
-	timer.Start( "hitdelay" )
+	timer.Start( "hitdelay2" )
 
 
 end
@@ -88,58 +98,108 @@ end
 
 function SWEP:Hitscan()
 
-//This function calculate the trajectory
+	//This function calculate the trajectory
+	
+		local tr = util.TraceLine( {
+			start = self.Owner:GetShootPos(),
+			endpos = self.Owner:GetShootPos() + ( self.Owner:GetAimVector() * self.HitDistance * 1.5 ),
+			filter = self.Owner,
+			mask = MASK_SHOT_HULL
+		} )
+	
+	//This if shot the bullets
+	
+		if ( tr.Hit ) then
+			
+			bullet = {}
+			bullet.Num    = 1
+			bullet.Src    = self.Owner:GetShootPos()
+			bullet.Dir    = self.Owner:GetAimVector()
+			bullet.Spread = Vector(0, 0, 0)
+			bullet.Tracer = 0
+			bullet.Force  = 5
+			bullet.Hullsize = 0
+			bullet.Distance = self.HitDistance * 1.5
+			bullet.Damage = math.random( 29, 30 )
+			self.Owner:FireBullets(bullet)
+	
+			self:EmitSound( SwingSound )
 
-	for i=0, 170 do
+			local vm = self.Owner:GetViewModel()
+	
+			vm:SendViewModelMatchingSequence( vm:LookupSequence( "swing_hit" ) )
+	
+			if tr.Entity:IsPlayer() or string.find(tr.Entity:GetClass(),"npc") or string.find(tr.Entity:GetClass(),"prop_ragdoll") then
+				local randomstab = math.random(1,2)
+				
+				if (randomstab == 1) then self:EmitSound( StabSound1 ) end
+				if (randomstab == 2) then self:EmitSound( StabSound2 ) end		
+			else
+				self:EmitSound( SlashSound1 )
 
-	local tr = util.TraceLine( {
-		start = (self.Owner:GetShootPos() - (self.Owner:EyeAngles():Up() * 10)),
-		endpos = (self.Owner:GetShootPos() - (self.Owner:EyeAngles():Up() * 10)) + ( self.Owner:EyeAngles():Up() * ( self.HitDistance * 0.7 * math.cos(math.rad(i)) ) ) + ( self.Owner:EyeAngles():Forward() * ( self.HitDistance * 1.5 * math.sin(math.rad(i)) ) ) + ( self.Owner:EyeAngles():Right() * self.HitInclination * self.HitDistance * math.cos(math.rad(i)) ),
-		filter = self.Owner,
-		mask = MASK_SHOT_HULL
-	} )
-
-//This if shot the bullets
-
-	if ( tr.Hit ) then
+				local randomslash = math.random(1,2)
+				
+				if (randomslash == 1) then self:EmitSound( SlashSound1 ) end
+				if (randomslash == 2) then self:EmitSound( SlashSound2 ) end	
+			end
+	
 		
-		local strikevector = ( self.Owner:EyeAngles():Up() * ( self.HitDistance * 0.5 * math.cos(math.rad(i)) ) ) + ( self.Owner:EyeAngles():Forward() * ( self.HitDistance * 1.5 * math.sin(math.rad(i)) ) ) + ( self.Owner:EyeAngles():Right() * self.HitInclination * self.HitDistance * math.cos(math.rad(i)) )
+	//if end
+			//else vm:SendViewModelMatchingSequence( vm:LookupSequence( "misscenter1" ) )
+			end
+	
+	end
 
-		bullet = {}
-		bullet.Num    = 1
-		bullet.Src    = (self.Owner:GetShootPos() - (self.Owner:EyeAngles():Up() * 15))
-		bullet.Dir    = strikevector:GetNormalized()
-		bullet.Spread = Vector(0, 0, 0)
-		bullet.Tracer = 0
-		bullet.Force  = 5
-		bullet.Hullsize = 0
-		bullet.Distance = self.HitDistance * 1.5
-		bullet.Damage = 50
-		self.Owner:FireBullets(bullet)
+function SWEP:Hitscan_Secondary()
 
-		//local vPoint = (self.Owner:GetShootPos() - (self.Owner:EyeAngles():Up() * 10))
-		//local effectdata = EffectData()
-		//effectdata:SetOrigin( vPoint )
-		//util.Effect( "BloodImpact", effectdata )
+	//This function calculate the trajectory
+	
+		local tr = util.TraceLine( {
+			start = self.Owner:GetShootPos(),
+			endpos = self.Owner:GetShootPos() + ( self.Owner:GetAimVector() * self.HitDistance * 1.5 ),
+			filter = self.Owner,
+			mask = MASK_SHOT_HULL
+		} )
+	
+	//This if shot the bullets
+	
+		if ( tr.Hit ) then
+			
+			bullet = {}
+			bullet.Num    = 1
+			bullet.Src    = self.Owner:GetShootPos()
+			bullet.Dir    = self.Owner:GetAimVector()
+			bullet.Spread = Vector(0, 0, 0)
+			bullet.Tracer = 0
+			bullet.Force  = 5
+			bullet.Hullsize = 0
+			bullet.Distance = self.HitDistance * 4
+			bullet.Damage = math.random( 80, 100 )
+			self.Owner:FireBullets(bullet)
 
-		self:EmitSound( SwingSound )
+			local vm = self.Owner:GetViewModel()
+	
+			//vm:SendViewModelMatchingSequence( vm:LookupSequence( "heavy_swing_hit" ) )
+	
+			if tr.Entity:IsPlayer() or string.find(tr.Entity:GetClass(),"npc") or string.find(tr.Entity:GetClass(),"prop_ragdoll") then
+				local randomstab = math.random(1,2)
+				
+				if (randomstab == 1) then self:EmitSound( StabSound1 ) end
+				if (randomstab == 2) then self:EmitSound( StabSound2 ) end		
+			else
+				local randomslash = math.random(1,2)
+				
+				if (randomslash == 1) then self:EmitSound( SlashSound1 ) end
+				if (randomslash == 2) then self:EmitSound( SlashSound2 ) end	
+			end
+	
+		
+	//if end
+			//else vm:SendViewModelMatchingSequence( vm:LookupSequence( "misscenter1" ) )
+			end
+	
+	end
 
-		//vm:SendViewModelMatchingSequence( vm:LookupSequence( "hitcenter1" ) )
-
-		if tr.Entity:IsPlayer() or string.find(tr.Entity:GetClass(),"npc") or string.find(tr.Entity:GetClass(),"prop_ragdoll") then
-			self:EmitSound( HitSoundBody )
-			tr.Entity:SetVelocity( self.Owner:GetAimVector() * Vector( 1, 1, 0 ) * self.HitPushback )
-		else
-			self:EmitSound( HitSoundWorld )
-		end
-//if break
-		break
-//if end
-		//else vm:SendViewModelMatchingSequence( vm:LookupSequence( "misscenter1" ) )
-		end
-end
-
-end
 
 function SWEP:Deploy()
 
