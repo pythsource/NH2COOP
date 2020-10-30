@@ -1,4 +1,8 @@
 fake/
 *.ain
 
-
+*.prt
+*.log
+*.vmx
+*.bsp
+!maps\*.bsp
