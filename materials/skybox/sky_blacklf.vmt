@@ -1,7 +1,0 @@
-unlitgeneric
-{
-	$basetexture "skybox/sky_blacklf"
-	$hdrcompressedtexture "skybox/sky_blacklf"
-	$nofog 1
-	$ignorez 1
-}

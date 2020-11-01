@@ -1,2 +1,0 @@
-These SNPCs are taken from [VJ] Nightmare House 2 SNPC :ReBirth. I don't want to own this addon in any way, I added only lines of code for the output OnDeath (in hammer).
-This means that you still need to download the addon from steam workshop.

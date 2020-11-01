@@ -1,7 +1,0 @@
-"VertexLitGeneric"
-{
-	"$basetexture" "models/swat_guy/swat_yellow_DM"	
-	"$bumpmap" "models/swat_guy/swat_generic_NM"	
-	
-	"$surfaceprop" "flesh"
-}

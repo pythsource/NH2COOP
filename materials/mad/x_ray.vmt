@@ -1,7 +1,0 @@
-"LightmappedGeneric"
-{
-	"$baseTexture" "mad/X_RAY"
-	"$surfaceprop" "dirt"
-	"$decal" 1
-	"%keywords" "X_RAY"
-}

@@ -1,7 +1,0 @@
-"VertexLitGeneric"
-{
-	// Original shader: VertexLitTexture
-	"$basetexture" "models/NH2Zombies/Male/vance_facemap"
-	"$halflambert" 1
-	"$nodecal" "1"
-}

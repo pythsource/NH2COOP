@@ -1,6 +1,0 @@
-"VertexLitGeneric"
-{
-	// Original shader: VertexLitTexture
-	"$basetexture" "models/zombies/janitors/citizen_sheet"
-	"$halflambert" 1
-}

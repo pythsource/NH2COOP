@@ -1,8 +1,0 @@
-"LightmappedGeneric"
-{
-	"$baseTexture" "mad/hensays"
-	"$surfaceprop" "dirt"
-	"%keywords" "hensays"
-	"$transparent" "1"
-	"$translucent" "1"
-}

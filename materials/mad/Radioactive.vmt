@@ -1,8 +1,0 @@
-"LightmappedGeneric"
-{
-	"$baseTexture" "mad/Radioactive"
-	"$surfaceprop" "dirt"
-	"$decal" 1
-	"$translucent" "1"
-	"%keywords" "Radioactive"
-}

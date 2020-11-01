@@ -1,7 +1,0 @@
-"LightmappedGeneric"
-{
-	"$baseTexture" "mad/elevctrlroom_sign"
-	"$surfaceprop" "dirt"
-	"$decal" 1
-	"%keywords" "elevator"
-}
