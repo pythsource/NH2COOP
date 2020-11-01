@@ -1,0 +1,45 @@
+/////////////////////////
+// Project definitions //
+/////////////////////////
+
+$Project "client"
+{
+	"game\client\client_nh2coop.vpc"	[($WIN32||$X360||$POSIX) && $NH2]
+}
+
+$Project "game_shader_dx9"
+{
+	"materialsystem\stdshaders\game_shader_dx9_episodic.vpc"  [$NH2]
+}
+
+$Project "server"
+{
+	"game\server\server_nh2coop.vpc"	[($WIN32||$X360||$POSIX) && $NH2]
+}
+
+$Project "mathlib"
+{
+	"mathlib\mathlib.vpc" [$WINDOWS||$X360||$POSIX]
+}
+
+$Project "raytrace"
+{
+	"raytrace\raytrace.vpc" [$WIN32||$X360||$POSIX]
+}
+
+$Project "tier1"
+{
+	"tier1\tier1.vpc" 	[$WINDOWS || $X360||$POSIX]
+}
+
+$Project "vgui_controls"
+{
+	"vgui2\vgui_controls\vgui_controls.vpc" [$WIN32||$X360||$POSIX]
+}
+
+$Project "vscript"
+{
+	"vscript\vscript.vpc"
+}
+
+

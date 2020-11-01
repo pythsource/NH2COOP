@@ -1,0 +1,21 @@
+$Macro SRCDIR		"..\.."
+$Macro GAMENAME 	"nh2coop"
+
+$Include "$SRCDIR\game\client\client_base.vpc"
+$Include "$SRCDIR\game\client\client_nh2.vpc"
+
+$Configuration
+{
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE"
+		$PreprocessorDefinitions		"$BASE"
+	}
+}
+
+$Project "Client (Nightmare House 2 Coop)"
+{
+	//$Folder	"Source Files"
+	//{		
+	//}	
+}
